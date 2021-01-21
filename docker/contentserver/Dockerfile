@@ -1,4 +1,4 @@
-FROM ubuntu:openjdk
+FROM openjdk
 
 RUN useradd --create-home --shell /bin/bash dmadmin && \
     echo "dmadmin:D0cum3ntum01" | chpasswd && \
@@ -26,7 +26,9 @@ RUN cd /tmp/dctm && \
     ./serverSetup.bin -f contentserver.properties -i silent && \
     sed -i -e "s/dfc.docbroker.host\[0\]=.*/dfc.docbroker.host[0]=dctm/" $DOCUMENTUM/config/dfc.properties && \
     sed -i -e "s/dfc.docbroker.port\[0\]=.*/dfc.docbroker.port[0]=1489/" $DOCUMENTUM/config/dfc.properties && \
-    sed -i 's,^JAVA_OPTS="[^"]*,& -Djava.net.preferIPv4Stack=true,' $DOCUMENTUM/wildfly17.0.1/server/startMethodServer.sh
+    sed -i 's,^JAVA_OPTS="[^"]*,& -Djava.net.preferIPv4Stack=true,' $DOCUMENTUM/wildfly17.0.1/server/startMethodServer.sh && \
+	echo "dfc.security.keystore.file=/opt/documentum/config/dfc.keystore" >> /opt/documentum/wildfly17.0.1/server/DctmServer_MethodServer/deployments/ServerApps.ear/APP-INF/classes/dfc.properties && \
+	echo "dfc.security.keystore.file=/opt/documentum/config/dfc.keystore" >> /opt/documentum/wildfly17.0.1/server/DctmServer_MethodServer/deployments/acs.ear/lib/configs.jar/dfc.properties
 
 USER root
 

@@ -12,13 +12,14 @@ trap shutdown SIGHUP SIGINT SIGTERM
 
 /opt/documentum/dba/dm_launch_Docbroker
 
-if [ ! -d /opt/documentum/dba/config/dctm ]; then
-    echo "Create repository"
-    /opt/documentum/product/20.2/install/dm_launch_server_config_program.sh -f /home/dmadmin/repository.properties
-	echo "Stopping the repository"
-    /opt/documentum/dba/dm_shutdown_dctm
+if [ ! -d /opt/documentum/dba/config/dctm ]
+then
+  echo "Create repository"
+  /opt/documentum/product/20.2/install/dm_launch_server_config_program.sh -f /home/dmadmin/repository.properties
+else
+  /opt/documentum/dba/dm_start_dctm
 fi
 
-/opt/documentum/dba/dm_start_dctm
+#exec $@
 
-exec $@
+tail -f /opt/documentum/dba/log/docbroker.dctm.1489.log
